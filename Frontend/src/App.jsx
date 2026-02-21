@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import FacultyDashboard from './pages/FacultyDashboard';
+import ClassManagement from './pages/ClassManagement';
+import ClassIssuesList from './pages/ClassIssuesList';
+import ClassIssueDetails from './pages/ClassIssueDetails';
 import Profile from './pages/Profile';
 import DashboardLayout from './layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -11,33 +14,15 @@ function App() {
     return (
         <Router>
             <Routes>
-                {/* 1. Public Authentication */}
                 <Route path="/" element={<Login />} />
-                <Route path="/login" element={<Login />} />
 
-                {/* 2. Admin Portal - role_name: SuperAdmin */}
                 <Route
                     path="/admin/*"
                     element={
-                        <ProtectedRoute allowedRoleName="SuperAdmin">
+                        <ProtectedRoute allowedRoleName="Admin">
                             <DashboardLayout>
                                 <Routes>
                                     <Route index element={<AdminDashboard />} />
-                                    <Route path="profile" element={<Profile />} />
-                                </Routes>
-                            </DashboardLayout>
-                        </ProtectedRoute>
-                    }
-                />
-
-                {/* 3. Head of Exam - role_name: HeadOfExam */}
-                <Route
-                    path="/hoe/*"
-                    element={
-                        <ProtectedRoute allowedRoleName="HeadOfExam">
-                            <DashboardLayout>
-                                <Routes>
-                                    <Route index element={<div className="p-10 text-center font-bold text-gray-900">Head Of Exam Console</div>} />
                                     <Route path="profile" element={<Profile />} />
                                 </Routes>
                             </DashboardLayout>
@@ -53,6 +38,9 @@ function App() {
                             <DashboardLayout>
                                 <Routes>
                                     <Route index element={<FacultyDashboard />} />
+                                    <Route path="classes" element={<ClassManagement />} />
+                                    <Route path="issues" element={<ClassIssuesList />} />
+                                    <Route path="issues/:id" element={<ClassIssueDetails />} />
                                     <Route path="profile" element={<Profile />} />
                                 </Routes>
                             </DashboardLayout>
