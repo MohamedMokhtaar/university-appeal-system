@@ -3,7 +3,7 @@ import { User, Menu, Bell, LogOut, Shield, ChevronDown } from 'lucide-react';
 import { logout, getUser } from '../utils/auth';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Header = ({ onMenuClick }) => {
+const Header = ({ onMenuClick, onNotifClick, unreadCount }) => {
     const user = getUser();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -31,8 +31,16 @@ const Header = ({ onMenuClick }) => {
 
             <div className="flex items-center gap-2">
                 {/* Notification Bell */}
-                <button className="text-gray-400 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-50 mr-1">
+                <button
+                    onClick={onNotifClick}
+                    className="relative text-gray-400 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-50 mr-1 group"
+                >
                     <Bell size={18} />
+                    {unreadCount > 0 && (
+                        <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 border-2 border-white text-[8px] font-bold text-white group-hover:border-blue-50">
+                            {unreadCount}
+                        </span>
+                    )}
                 </button>
 
                 {/* User Menu Dropdown */}

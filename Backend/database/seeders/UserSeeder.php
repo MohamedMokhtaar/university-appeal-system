@@ -37,7 +37,6 @@ class UserSeeder extends Seeder
                 'username' => 'admin',
                 'password_hash' => hash('sha256', 'password123'),
                 'status' => 'Active',
-                'Accees_channel' => 'BOTH',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

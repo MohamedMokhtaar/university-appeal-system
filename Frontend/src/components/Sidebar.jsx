@@ -48,15 +48,16 @@ const Sidebar = ({ isOpen, onClose }) => {
 
     const menuItems = [
         { icon: LayoutDashboard, label: "Dashboard", role: true, path: getRedirectPath(roleName) },
+        { icon: Users, label: "Class & Students", role: isFaculty, path: '/faculty/classes' },
         { icon: Users, label: "Manage Students", role: isSuperAdmin },
         { icon: UserSquare2, label: "Manage Teachers", role: isSuperAdmin },
         { icon: FileText, label: "Exams Management", role: isSuperAdmin || isHeadOfExam },
         { icon: CalendarClock, label: "Appeal Deadlines", role: isSuperAdmin || isHeadOfExam },
         { icon: Zap, label: "Activate Period", role: isSuperAdmin || isHeadOfExam },
-        { icon: AlertCircle, label: "Class Issues", role: isSuperAdmin || isFaculty },
-        { icon: ShieldCheck, label: "Campus Environment", role: isSuperAdmin || isFaculty },
-        { icon: BookOpen, label: "Coursework Appeals", role: isSuperAdmin || isFaculty || isTeacher },
-        { icon: MessageSquare, label: "Support Messages", role: true },
+        { icon: AlertCircle, label: "Class Issues", role: isSuperAdmin || isFaculty, path: isFaculty ? '/faculty/issues' : null },
+        { icon: ShieldCheck, label: "Campus Environment", role: isSuperAdmin || isFaculty, path: isFaculty ? '/faculty/campus' : null },
+        { icon: BookOpen, label: "Coursework Appeals", role: isSuperAdmin || isFaculty || isTeacher, path: isFaculty ? '/faculty/coursework' : isTeacher ? '/teacher/appeals' : null },
+        { icon: MessageSquare, label: "Support Messages", role: isSuperAdmin },
         { icon: FileBarChart, label: "Reports", role: isSuperAdmin || isHeadOfExam || isFaculty || isTeacher },
         { icon: Settings, label: "Settings", role: isSuperAdmin || isHeadOfExam || isFaculty },
     ];
