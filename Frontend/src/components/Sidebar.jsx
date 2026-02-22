@@ -22,7 +22,7 @@ const SidebarItem = ({ icon: Icon, label, active = false, onClick }) => (
     <div
         onClick={onClick}
         className={`
-        flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 group
+        flex items-center justify-betwwen px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 group
         ${active
                 ? 'bg-blue-50 text-blue-700 font-semibold'
                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}
