@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import { Eye, EyeOff, Loader2, Lock, ShieldCheck, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, User, Loader2, ShieldCheck } from 'lucide-react';
 import client from '../api/client';
-import { setUser, clearUser, getRedirectPath } from '../utils/auth';
+import { clearUser, getRedirectPath, setUser } from '../utils/auth';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -16,8 +16,6 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
-
-        // Clear session before attempt
         clearUser();
 
         try {
@@ -39,61 +37,56 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-[400px] bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                {/* Logo & Header Inside Card */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl text-white shadow-xl shadow-blue-50 mb-4">
-                        <ShieldCheck size={32} />
+        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+            <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
+                <div className="mb-6 text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-blue-600 text-white">
+                        <ShieldCheck size={26} />
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Sign In</h1>
-                    <p className="text-gray-500 text-sm mt-1 font-medium italic">Thesis Management Portal</p>
+                    <h1 className="mt-4 text-2xl font-semibold text-black">Sign In</h1>
+                    <p className="mt-1 text-sm text-gray-600">Thesis Management Portal</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    {error && (
-                        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-xs font-semibold text-center border border-red-100">
-                            {error}
-                        </div>
-                    )}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-center text-xs text-red-600">{error}</div>}
 
                     <div>
-                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-2 ml-1">Username</label>
+                        <label className="mb-1 block text-sm font-medium text-black">Username</label>
                         <div className="relative">
-                            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
-                                <User size={18} />
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <User size={16} />
                             </span>
                             <input
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all text-sm font-medium text-gray-900 placeholder:text-gray-400"
-                                placeholder="Enter your username"
+                                className="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-3 text-sm text-black outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                                placeholder="Enter username"
                                 required
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-widest mb-2 ml-1">Password</label>
+                        <label className="mb-1 block text-sm font-medium text-black">Password</label>
                         <div className="relative">
-                            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
-                                <Lock size={18} />
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <Lock size={16} />
                             </span>
                             <input
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-11 pr-11 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-600 outline-none transition-all text-sm font-medium text-gray-900 placeholder:text-gray-400"
-                                placeholder="••••••••"
+                                className="w-full rounded-lg border border-gray-300 py-2.5 pl-9 pr-9 text-sm text-black outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                                placeholder="Enter password"
                                 required
                             />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-blue-600"
+                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-blue-600"
                             >
-                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
                         </div>
                     </div>
@@ -101,14 +94,10 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-50 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 mt-2"
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                        {loading ? <Loader2 className="animate-spin" size={20} /> : 'Login to Portal'}
+                        {loading ? <Loader2 size={16} className="animate-spin" /> : 'Login'}
                     </button>
-
-                    <div className="text-center mt-6 text-gray-400 text-[10px] font-medium uppercase tracking-widest">
-                        &copy; 2026 University System
-                    </div>
                 </form>
             </div>
         </div>
@@ -116,4 +105,3 @@ const Login = () => {
 };
 
 export default Login;
-

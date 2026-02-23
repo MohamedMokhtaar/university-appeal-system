@@ -158,7 +158,7 @@ const ClassIssuesList = () => {
                                 </td>
                                 <td className="px-8 py-6 text-right">
                                     <button
-                                        onClick={() => navigate(`/faculty/issues/${issue.cl_is_co_no}`)}
+                                        onClick={() => navigate(`/class-issues/${issue.cl_is_co_no}`)}
                                         className="inline-flex items-center justify-center px-5 py-2 rounded-xl bg-blue-50 text-blue-600 text-xs font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all"
                                     >
                                         View

@@ -19,18 +19,13 @@ export const clearUser = () => {
 
 export const logout = () => {
     clearUser();
-    window.location.href = '/login';
+    window.location.href = '/';
 };
 
 /**
  * Maps role_name string exactly as in DB to the correct dashboard path
  */
 export const getRedirectPath = (role_name) => {
-    switch (role_name) {
-        case 'SuperAdmin': return '/admin';
-        case 'HeadOfExam': return '/hoe';
-        case 'Faculty': return '/faculty';
-        case 'Teacher': return '/teacher';
-        default: return '/';
-    }
+    if (!role_name) return '/';
+    return '/dashboard';
 };

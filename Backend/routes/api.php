@@ -2,11 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AcademicStructureController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FacultyClassController;
 use App\Http\Controllers\FacultyIssueController;
 use App\Http\Controllers\FacultyNotificationController;
+use App\Http\Controllers\StudentManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,45 @@ Route::prefix('faculty')->group(function () {
     // Notifications
     Route::get('/notifications/{user_id}', [FacultyNotificationController::class, 'index']);
     Route::put('/notifications/{not_no}/read', [FacultyNotificationController::class, 'markAsRead']);
+});
+
+Route::prefix('student-management')->group(function () {
+    Route::get('/schools', [StudentManagementController::class, 'listSchools']);
+    Route::post('/schools', [StudentManagementController::class, 'createSchool']);
+    Route::put('/schools/{sch_no}', [StudentManagementController::class, 'updateSchool']);
+    Route::delete('/schools/{sch_no}', [StudentManagementController::class, 'deleteSchool']);
+
+    Route::get('/parents', [StudentManagementController::class, 'listParents']);
+    Route::post('/parents', [StudentManagementController::class, 'createParent']);
+    Route::put('/parents/{parent_no}', [StudentManagementController::class, 'updateParent']);
+    Route::delete('/parents/{parent_no}', [StudentManagementController::class, 'deleteParent']);
+});
+
+Route::prefix('academic-structure')->group(function () {
+    Route::get('/faculties', [AcademicStructureController::class, 'listFaculties']);
+    Route::post('/faculties', [AcademicStructureController::class, 'createFaculty']);
+    Route::put('/faculties/{faculty_no}', [AcademicStructureController::class, 'updateFaculty']);
+    Route::delete('/faculties/{faculty_no}', [AcademicStructureController::class, 'deleteFaculty']);
+
+    Route::get('/departments', [AcademicStructureController::class, 'listDepartments']);
+    Route::post('/departments', [AcademicStructureController::class, 'createDepartment']);
+    Route::put('/departments/{dept_no}', [AcademicStructureController::class, 'updateDepartment']);
+    Route::delete('/departments/{dept_no}', [AcademicStructureController::class, 'deleteDepartment']);
+
+    Route::get('/semesters', [AcademicStructureController::class, 'listSemesters']);
+    Route::post('/semesters', [AcademicStructureController::class, 'createSemester']);
+    Route::put('/semesters/{sem_no}', [AcademicStructureController::class, 'updateSemester']);
+    Route::delete('/semesters/{sem_no}', [AcademicStructureController::class, 'deleteSemester']);
+
+    Route::get('/academics', [AcademicStructureController::class, 'listAcademics']);
+    Route::post('/academics', [AcademicStructureController::class, 'createAcademic']);
+    Route::put('/academics/{acy_no}', [AcademicStructureController::class, 'updateAcademic']);
+    Route::delete('/academics/{acy_no}', [AcademicStructureController::class, 'deleteAcademic']);
+
+    Route::get('/subjects', [AcademicStructureController::class, 'listSubjects']);
+    Route::post('/subjects', [AcademicStructureController::class, 'createSubject']);
+    Route::put('/subjects/{sub_no}', [AcademicStructureController::class, 'updateSubject']);
+    Route::delete('/subjects/{sub_no}', [AcademicStructureController::class, 'deleteSubject']);
 });
 
 Route::get('/profile/me', [ProfileController::class, 'me']);

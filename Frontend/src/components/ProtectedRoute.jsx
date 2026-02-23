@@ -11,8 +11,10 @@ const ProtectedRoute = ({ children, allowedRoleName }) => {
     }
 
     // 2. Check Role Name string match
-    if (allowedRoleName && user.role_name !== allowedRoleName) {
-        console.warn(`Access Denied. Required Role: ${allowedRoleName}. Current Role: ${user.role_name}`);
+    const isAdmin = user.role_name === 'Admin' || user.role_name === 'SuperAdmin';
+    const allowedRoles = Array.isArray(allowedRoleName) ? allowedRoleName : (allowedRoleName ? [allowedRoleName] : []);
+    if (!isAdmin && allowedRoles.length > 0 && !allowedRoles.includes(user.role_name)) {
+        console.warn(`Access Denied. Required Role: ${allowedRoles.join(', ')}. Current Role: ${user.role_name}`);
         return <Navigate to="/" replace />;
     }
 

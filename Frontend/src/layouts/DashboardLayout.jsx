@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
 import NotificationDrawer from '../components/NotificationDrawer';
+import Sidebar from '../components/Sidebar';
 import classIssueService from '../api/classIssueService';
 import { getUser } from '../utils/auth';
 
@@ -32,7 +33,7 @@ const DashboardLayout = ({ children }) => {
     }, []);
 
     return (
-        <div className="flex h-screen bg-gray-50/50 overflow-hidden font-sans">
+        <div className="flex h-screen overflow-hidden bg-gray-50">
             <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -42,8 +43,8 @@ const DashboardLayout = ({ children }) => {
                     unreadCount={unreadCount}
                 />
                 <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 lg:p-6">
-                    <div className="max-w-[1600px] mx-auto">
-                        {children}
+                    <div className="mx-auto w-full max-w-[1600px]">
+                        {children || <Outlet />}
                     </div>
                 </main>
             </div>
