@@ -1,0 +1,21 @@
+# Normalize text in repo
+* text=auto
+
+# Force LF for source files
+*.php  text eol=lf
+*.blade.php text eol=lf
+*.js   text eol=lf
+*.jsx  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.md   text eol=lf
+*.html text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Linux/Mac scripts
+*.sh  text eol=lf
