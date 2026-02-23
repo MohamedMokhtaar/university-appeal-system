@@ -1,89 +1,114 @@
-import React, { useState } from 'react';
-import { User, Menu, Bell, LogOut, Shield, ChevronDown } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Bell, ChevronDown, LogOut, Menu, Shield, User } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { logout, getUser } from '../utils/auth';
-import { useNavigate, Link } from 'react-router-dom';
 
 const Header = ({ onMenuClick, onNotifClick, unreadCount }) => {
     const user = getUser();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
 
-    const getProfilePath = () => {
-        switch (user?.role_name) {
-            case 'SuperAdmin': return '/admin/profile';
-            case 'HeadOfExam': return '/hoe/profile';
-            case 'Faculty': return '/faculty/profile';
-            case 'Teacher': return '/teacher/profile';
-            default: return '/';
-        }
-    };
+    const pageTitle = useMemo(() => {
+        if (location.pathname.startsWith('/student-management')) return 'Student Management';
+        if (location.pathname.startsWith('/academic-structure')) return 'Academic Structure';
+        if (location.pathname.startsWith('/exam-appeals')) return 'Exam Appeals';
+        if (location.pathname.startsWith('/reporting')) return 'Reporting';
+        if (location.pathname.startsWith('/class-issues')) return 'Class Issues';
+        if (location.pathname.startsWith('/class-management')) return 'Class Management';
+        if (location.pathname.startsWith('/campus-environment')) return 'Campus Environment';
+        if (location.pathname.startsWith('/messaging-support')) return 'Messaging / Support';
+        if (location.pathname.startsWith('/settings')) return 'Settings';
+        if (location.pathname.startsWith('/profile')) return 'Profile';
+        return 'Dashboard';
+    }, [location.pathname]);
+
+    useEffect(() => {
+        const onClickOutside = (event) => {
+            if (!menuRef.current || menuRef.current.contains(event.target)) {
+                return;
+            }
+            setIsMenuOpen(false);
+        };
+
+        document.addEventListener('mousedown', onClickOutside);
+        return () => document.removeEventListener('mousedown', onClickOutside);
+    }, []);
 
     return (
-        <header className="bg-white border-b border-gray-100 h-16 flex items-center justify-between px-6 shrink-0 z-20">
+        <header className="z-20 flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6">
             <div className="flex items-center gap-4">
-                <button onClick={onMenuClick} className="lg:hidden text-gray-500 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                <button onClick={onMenuClick} className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 lg:hidden">
                     <Menu size={20} />
                 </button>
-                <h2 className="text-gray-900 font-bold tracking-tight text-sm hidden md:block uppercase tracking-wider">
-                    University Appeals & Complaint MS
-                </h2>
+                <div>
+                    <p className="text-sm font-semibold text-black">{pageTitle}</p>
+                    <p className="text-xs text-gray-500">University Thesis Appeal System</p>
+                </div>
             </div>
 
-            <div className="flex items-center gap-2">
-                {/* Notification Bell */}
+            <div className="flex items-center gap-2" ref={menuRef}>
                 <button
                     onClick={onNotifClick}
-                    className="relative text-gray-400 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-50 mr-1 group"
+                    className="group relative rounded-lg p-2 text-gray-500 transition hover:bg-blue-50 hover:text-blue-600"
                 >
                     <Bell size={18} />
                     {unreadCount > 0 && (
-                        <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 border-2 border-white text-[8px] font-bold text-white group-hover:border-blue-50">
+                        <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
                             {unreadCount}
                         </span>
                     )}
                 </button>
 
-                {/* User Menu Dropdown */}
                 <div className="relative">
                     <button
+                        type="button"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
-                        className="flex items-center gap-3 px-3 py-1.5 hover:bg-gray-50 rounded-xl transition-all border border-transparent hover:border-gray-100"
+                        className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 transition hover:bg-gray-50"
                     >
-                        <div className="text-right hidden sm:block">
-                            <p className="text-xs font-bold text-gray-900 leading-none">{user?.display_name || user?.username}</p>
-                            <p className="text-[10px] font-medium text-gray-400 capitalize mt-1">{user?.role_name}</p>
+                        <div className="hidden text-right sm:block">
+                            <p className="text-xs font-semibold leading-none text-black">{user?.display_name || user?.username}</p>
+                            <p className="mt-1 text-[10px] text-gray-500">{user?.role_name}</p>
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white">
                             <User size={16} />
                         </div>
-                        <ChevronDown size={14} className={`text-gray-400 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+                        <ChevronDown size={14} className={`text-gray-500 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {isMenuOpen && (
-                        <>
-                            <div className="fixed inset-0 z-10" onClick={() => setIsMenuOpen(false)}></div>
-                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 z-20">
-                                <button
-                                    onClick={() => { navigate(getProfilePath()); setIsMenuOpen(false); }}
-                                    className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition-colors"
-                                >
-                                    <User size={14} className="text-blue-600" />
-                                    <span>Profile</span>
-                                </button>
-                                <div className="flex items-center gap-3 px-4 py-2 text-sm text-gray-300 cursor-not-allowed">
-                                    <Shield size={14} />
-                                    <span>Security</span>
-                                </div>
-                                <hr className="my-2 border-gray-50" />
-                                <button
-                                    onClick={logout}
-                                    className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                                >
-                                    <LogOut size={14} />
-                                    <span>Logout</span>
-                                </button>
-                            </div>
-                        </>
+                        <div className="absolute right-0 z-20 mt-2 w-52 rounded-xl border border-gray-200 bg-white py-2 shadow-lg">
+                            <button
+                                onClick={() => {
+                                    navigate('/profile');
+                                    setIsMenuOpen(false);
+                                }}
+                                className="flex w-full items-center gap-3 px-4 py-2 text-sm text-gray-700 transition hover:bg-blue-50"
+                            >
+                                <User size={14} className="text-blue-600" />
+                                <span>Profile</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                disabled
+                                className="flex w-full cursor-not-allowed items-center gap-3 px-4 py-2 text-sm text-gray-400"
+                            >
+                                <Shield size={14} />
+                                <span>Security</span>
+                            </button>
+
+                            <div className="my-2 border-t border-gray-100" />
+
+                            <button
+                                onClick={logout}
+                                className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 transition hover:bg-red-50"
+                            >
+                                <LogOut size={14} />
+                                <span>Logout</span>
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>

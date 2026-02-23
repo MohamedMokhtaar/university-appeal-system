@@ -1,14 +1,37 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import FacultyDashboard from './pages/FacultyDashboard';
-import ClassManagement from './pages/ClassManagement';
-import ClassIssuesList from './pages/ClassIssuesList';
-import ClassIssueDetails from './pages/ClassIssueDetails';
-import Profile from './pages/Profile';
-import DashboardLayout from './layouts/DashboardLayout';
+import { BrowserRouter as Router, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import DashboardLayout from './layouts/DashboardLayout';
+import AcademicStructure from './pages/AcademicStructure';
+import ClassIssueDetails from './pages/ClassIssueDetails';
+import ClassIssuesList from './pages/ClassIssuesList';
+import ClassManagement from './pages/ClassManagement';
+import Dashboard from './pages/Dashboard';
+import ExamAppeals from './pages/ExamAppeals';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import Reporting from './pages/Reporting';
+import Settings from './pages/Settings';
+import StudentManagement from './pages/StudentManagement';
+
+const CampusEnvironment = () => (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h1 className="text-2xl font-semibold text-black">Campus Environment</h1>
+        <p className="mt-2 text-sm text-gray-600">Environment reports and facilities operations will be shown here.</p>
+    </div>
+);
+
+const MessagingSupport = () => (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h1 className="text-2xl font-semibold text-black">Messaging / Support</h1>
+        <p className="mt-2 text-sm text-gray-600">Support conversations and internal communication tools will be shown here.</p>
+    </div>
+);
+
+const LegacyIssueRedirect = () => {
+    const { id } = useParams();
+    return <Navigate to={`/class-issues/${id}`} replace />;
+};
 
 function App() {
     return (
@@ -17,53 +40,228 @@ function App() {
                 <Route path="/" element={<Login />} />
 
                 <Route
+                    element={
+                        <ProtectedRoute>
+                            <DashboardLayout />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/profile" element={<Profile />} />
+
+                    <Route
+                        path="/student-management"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Admin', 'SuperAdmin']}>
+                                <StudentManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/academic-structure"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                                <AcademicStructure />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route path="/exam-appeals" element={<ExamAppeals />} />
+
+                    <Route
+                        path="/reporting"
+                        element={
+                            <ProtectedRoute allowedRoleName={['HeadOfExam', 'Admin', 'SuperAdmin', 'Faculty', 'Teacher']}>
+                                <Reporting />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/settings"
+                        element={
+                            <ProtectedRoute allowedRoleName={['HeadOfExam', 'Admin', 'SuperAdmin', 'Faculty', 'Teacher']}>
+                                <Settings />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/class-management"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                                <ClassManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/class-issues"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                                <ClassIssuesList />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/class-issues/:id"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                                <ClassIssueDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/campus-environment"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                                <CampusEnvironment />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/messaging-support"
+                        element={
+                            <ProtectedRoute allowedRoleName={['Admin', 'SuperAdmin', 'Faculty']}>
+                                <MessagingSupport />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route path="/dashboard/profile" element={<Navigate to="/profile" replace />} />
+                    <Route path="/dashboard/*" element={<Navigate to="/dashboard" replace />} />
+                </Route>
+
+                <Route
                     path="/admin/*"
                     element={
-                        <ProtectedRoute allowedRoleName="Admin">
-                            <DashboardLayout>
-                                <Routes>
-                                    <Route index element={<AdminDashboard />} />
-                                    <Route path="profile" element={<Profile />} />
-                                </Routes>
-                            </DashboardLayout>
+                        <ProtectedRoute allowedRoleName={['Admin', 'SuperAdmin']}>
+                            <Navigate to="/dashboard" replace />
                         </ProtectedRoute>
                     }
                 />
 
-                {/* 4. Faculty Portal - role_name: Faculty */}
+                <Route
+                    path="/hoe/*"
+                    element={
+                        <ProtectedRoute allowedRoleName="HeadOfExam">
+                            <Navigate to="/dashboard" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/faculty/classes"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                            <Navigate to="/class-management" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/faculty/issues"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                            <Navigate to="/class-issues" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/faculty/issues/:id"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                            <LegacyIssueRedirect />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/faculty/coursework"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin', 'Teacher']}>
+                            <Navigate to="/exam-appeals?tab=coursework-appeal" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/teacher/appeals"
+                    element={
+                        <ProtectedRoute allowedRoleName="Teacher">
+                            <Navigate to="/exam-appeals?tab=coursework-appeal" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/faculty/campus"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                            <Navigate to="/campus-environment" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/profile"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Admin', 'SuperAdmin']}>
+                            <Navigate to="/profile" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/hoe/profile"
+                    element={
+                        <ProtectedRoute allowedRoleName="HeadOfExam">
+                            <Navigate to="/profile" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/faculty/profile"
+                    element={
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                            <Navigate to="/profile" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/teacher/profile"
+                    element={
+                        <ProtectedRoute allowedRoleName="Teacher">
+                            <Navigate to="/profile" replace />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route
                     path="/faculty/*"
                     element={
-                        <ProtectedRoute allowedRoleName="Faculty">
-                            <DashboardLayout>
-                                <Routes>
-                                    <Route index element={<FacultyDashboard />} />
-                                    <Route path="classes" element={<ClassManagement />} />
-                                    <Route path="issues" element={<ClassIssuesList />} />
-                                    <Route path="issues/:id" element={<ClassIssueDetails />} />
-                                    <Route path="profile" element={<Profile />} />
-                                </Routes>
-                            </DashboardLayout>
+                        <ProtectedRoute allowedRoleName={['Faculty', 'Admin', 'SuperAdmin']}>
+                            <Navigate to="/dashboard" replace />
                         </ProtectedRoute>
                     }
                 />
 
-                {/* 5. Teacher Portal - role_name: Teacher */}
                 <Route
                     path="/teacher/*"
                     element={
                         <ProtectedRoute allowedRoleName="Teacher">
-                            <DashboardLayout>
-                                <Routes>
-                                    <Route index element={<div className="p-10 text-center font-bold text-gray-900">Teacher Coursework Hub</div>} />
-                                    <Route path="profile" element={<Profile />} />
-                                </Routes>
-                            </DashboardLayout>
+                            <Navigate to="/dashboard" replace />
                         </ProtectedRoute>
                     }
                 />
 
-                {/* Catch all - Return to Login */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>

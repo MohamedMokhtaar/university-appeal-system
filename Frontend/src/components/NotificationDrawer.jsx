@@ -39,10 +39,10 @@ const NotificationDrawer = ({ isOpen, onClose, userId }) => {
             await classIssueService.markNotificationRead(not.not_no);
             // Deep linking logic
             if (not.module === 'ClassIssues' && not.record_id) {
-                navigate(`/faculty/issues/${not.record_id}`);
+                navigate(`/class-issues/${not.record_id}`);
             } else {
                 // Default fallback for other modules
-                navigate('/faculty/issues');
+                navigate('/class-issues');
             }
             onClose();
             fetchNotifications();

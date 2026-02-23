@@ -66,7 +66,7 @@ const ClassIssueDetails = () => {
     return (
         <div className="p-6 max-w-5xl mx-auto">
             <button
-                onClick={() => navigate('/faculty/issues')}
+                onClick={() => navigate('/class-issues')}
                 className="group flex items-center text-sm font-bold text-gray-500 hover:text-indigo-600 mb-8 transition-colors"
             >
                 <svg className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
